@@ -41,7 +41,6 @@ public class GameManagerScript : MonoBehaviour
     public RectTransform deskArea; 
     public RectTransform trashCan; 
 
-    // --- TUTORIAL & FADE UI ---
     [Header("Tutorial & Fading")]
     public GameObject tutorialPanel; 
     public CanvasGroup fadeOverlay;
@@ -52,7 +51,8 @@ public class GameManagerScript : MonoBehaviour
     private int approval = 50;
     private int actionPoints = 8;
     private int currentDay = 1;
-    private int dailyApprovalDecay = 5; 
+    private int dailyApprovalDecay = 10; 
+    private int dailyMoneyDecay = 5000;
 
     [Header("Policy Roster")]
     public Policy[] dailyPolicies = new Policy[30]; 
@@ -61,7 +61,6 @@ public class GameManagerScript : MonoBehaviour
     private bool isInspected = false;
     private bool policyDealtWith = false; 
 
-    // --- AUDIO (NO MUSIC TRACK) ---
     [Header("Audio (Juice)")]
     public AudioSource audioSource;
     public AudioClip stampThudSound;
@@ -136,6 +135,7 @@ public class GameManagerScript : MonoBehaviour
         currentDay++;
         actionPoints = 8; 
         approval -= dailyApprovalDecay; 
+        money -= dailyMoneyDecay;
         
         if (currentDay > 30)
         {
@@ -430,10 +430,10 @@ public class GameManagerScript : MonoBehaviour
 
     public void CallPRFirm()
     {
-        if (money >= 15000)
+        if (money >= 30000)
         {
             PlaySound(cashRegisterSound);
-            money -= 15000;
+            money -= 30000;
             approval = Mathf.Clamp(approval + 15, 0, 100);
             
             StartCoroutine(FlashText(approvalText, Color.green));
@@ -451,17 +451,17 @@ public class GameManagerScript : MonoBehaviour
 
     public void CallCorporateFixer()
     {
-        if (actionPoints >= 2)
+        if (actionPoints >= 4)
         {
             PlaySound(cashRegisterSound);
-            actionPoints -= 2;
-            money += 20000;
+            actionPoints -= 4;
+            money += 10000;
             approval = Mathf.Clamp(approval - 10, 0, 100);
             
             StartCoroutine(FlashText(moneyText, Color.green));
             StartCoroutine(FlashText(approvalText, Color.red));
 
-            notepadText.text = "<b>Action:</b> Fixer Meeting\nSecured dark money <color=green>(+$20,000)</color>.\nThe leaked meeting angered constituents <color=red>(-10% Approval)</color>.";
+            notepadText.text = "<b>Action:</b> Fixer Meeting\nSecured dark money <color=green>(+$10,000)</color>.\nThe leaked meeting angered constituents <color=red>(-10% Approval)</color>.";
             
             StartCoroutine(ScreenShake(0.1f, 10f)); 
             UpdateUI();
