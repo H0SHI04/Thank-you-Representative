@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI; 
 using System.Collections; 
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Policy
@@ -51,8 +52,8 @@ public class GameManagerScript : MonoBehaviour
     private int approval = 50;
     private int actionPoints = 8;
     private int currentDay = 1;
-    private int dailyApprovalDecay = 10; 
-    private int dailyMoneyDecay = 5000;
+    private int dailyApprovalDecay = 5; 
+    private int dailyMoneyDecay = 2500;
 
     [Header("Policy Roster")]
     public Policy[] dailyPolicies = new Policy[30]; 
@@ -68,6 +69,10 @@ public class GameManagerScript : MonoBehaviour
     public AudioClip cashRegisterSound;
     public AudioClip errorBuzzerSound;
 
+    [Header("Game Over UI")]
+    public GameObject gameOverPanel;
+    public TextMeshProUGUI gameOverText;
+
     public void PlaySound(AudioClip clip)
     {
         if (audioSource != null && clip != null)
@@ -82,6 +87,7 @@ public class GameManagerScript : MonoBehaviour
         lobbyistPanel.SetActive(false); 
         
         // Show tutorial if it's day 1, otherwise hide it
+        if(gameOverPanel != null) gameOverPanel.SetActive(false);
         if (tutorialPanel != null) tutorialPanel.SetActive(currentDay == 1);
 
         // Begin the day with a fade-in
@@ -487,7 +493,19 @@ public class GameManagerScript : MonoBehaviour
             PlaySound(errorBuzzerSound); 
             approvalText.text = "Approval: 0% - RECALLED!";
             if (fadeOverlay != null) fadeOverlay.alpha = 0f; 
+
+            if(gameOverPanel != null)
+            {
+                gameOverText.text = "Approval is at 0%.\n\nYou have been voted out by your constituents";
+                gameOverPanel.SetActive(true);
+            }
         }
+    }
+
+    public void RestartGame()
+    {
+        PlaySound(paperRustleSound);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void UpdateUI()
