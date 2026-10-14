@@ -1,7 +1,8 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI; 
-using System.Collections; // Required for the screen shake Coroutine
+using System.Collections; 
+using System.Collections.Generic;
 
 [System.Serializable]
 public class Policy
@@ -25,22 +26,26 @@ public class GameManagerScript : MonoBehaviour
     public TextMeshProUGUI approvalText;
     public TextMeshProUGUI apText;
     public TextMeshProUGUI dayText;
+    public TextMeshProUGUI notepadText;
     
     [Header("Policy UI")]
     public TextMeshProUGUI policyTitleText;
     public TextMeshProUGUI policyDescText;
-    
-    [Header("Card Buttons")]
-    // Approve and Veto buttons removed to support physical stamps
-    public Button inspectButton; 
-
-    [Header("Campaign Buttons")]
-    public Button townHallButton;
-    public Button mediaAdsButton;
 
     [Header("Lobbyist UI")]
     public GameObject lobbyistPanel;
     public TextMeshProUGUI offerText;
+
+    [Header("Desk Clutter System")]
+    public GameObject[] clutterPrefabs; 
+    public RectTransform deskArea; 
+    public RectTransform trashCan; 
+
+    // --- TUTORIAL & FADE UI ---
+    [Header("Tutorial & Fading")]
+    public GameObject tutorialPanel; 
+    public CanvasGroup fadeOverlay;
+    public float fadeDuration = 1.0f;
 
     [Header("Core Stats")]
     private int money = 40000;
@@ -56,12 +61,100 @@ public class GameManagerScript : MonoBehaviour
     private bool isInspected = false;
     private bool policyDealtWith = false; 
 
+    // --- AUDIO (NO MUSIC TRACK) ---
+    [Header("Audio (Juice)")]
+    public AudioSource audioSource;
+    public AudioClip stampThudSound;
+    public AudioClip paperRustleSound;
+    public AudioClip cashRegisterSound;
+    public AudioClip errorBuzzerSound;
+
+    public void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
     void Start()
     {
         Generate30DayDeck();
         lobbyistPanel.SetActive(false); 
-        LoadNextPolicy();
+        
+        // Show tutorial if it's day 1, otherwise hide it
+        if (tutorialPanel != null) tutorialPanel.SetActive(currentDay == 1);
+
+        // Begin the day with a fade-in
+        StartCoroutine(FadeInDay());
+    }
+
+    
+    public void CloseTutorial()
+    {
+        if (tutorialPanel != null) tutorialPanel.SetActive(false);
+        PlaySound(paperRustleSound);
+    }
+
+    
+    private IEnumerator FadeInDay()
+    {
+        LoadNextPolicy(); // Sets up the desk while the screen is black
         UpdateUI();
+
+        if (fadeOverlay != null)
+        {
+            fadeOverlay.blocksRaycasts = true; 
+            float elapsed = 0f;
+            while (elapsed < fadeDuration)
+            {
+                fadeOverlay.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            fadeOverlay.alpha = 0f;
+            fadeOverlay.blocksRaycasts = false; 
+        }
+    }
+
+    private IEnumerator FadeOutToNextDay()
+    {
+        if (fadeOverlay != null)
+        {
+            fadeOverlay.blocksRaycasts = true; 
+            float elapsed = 0f;
+            while (elapsed < fadeDuration)
+            {
+                fadeOverlay.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeDuration);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+            fadeOverlay.alpha = 1f;
+        }
+
+        // Apply End of Day Math while screen is black
+        currentDay++;
+        actionPoints = 8; 
+        approval -= dailyApprovalDecay; 
+        
+        if (currentDay > 30)
+        {
+            dayText.text = "You Survived 30 Days!";
+            if (fadeOverlay != null) fadeOverlay.alpha = 0f; 
+            yield break; 
+        }
+
+        policyIndex++;
+        
+        // Check if daily decay caused a game over
+        if (approval <= 0) 
+        {
+            CheckLoseCondition();
+            yield break;
+        }
+
+        // Fade back in for the new morning
+        StartCoroutine(FadeInDay());
     }
 
     private void Generate30DayDeck()
@@ -107,19 +200,48 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    private void SpawnHateMail()
+    {
+        if (clutterPrefabs.Length == 0) return;
+
+        GameObject randomClutter = clutterPrefabs[Random.Range(0, clutterPrefabs.Length)];
+        GameObject spawnedClutter = Instantiate(randomClutter, deskArea);
+        
+        RectTransform rt = spawnedClutter.GetComponent<RectTransform>();
+        rt.anchoredPosition = new Vector2(Random.Range(-200f, 200f), Random.Range(-150f, 150f));
+
+        DraggableClutter clutterScript = spawnedClutter.GetComponent<DraggableClutter>();
+        if (clutterScript != null)
+        {
+            clutterScript.trashCan = this.trashCan;
+            clutterScript.gameManager = this;
+        }
+    }
+
     private void LoadNextPolicy()
     {
         if (policyIndex < dailyPolicies.Length)
         {
             isInspected = false;
             policyDealtWith = false;
-            
-            if (inspectButton != null) inspectButton.interactable = true;
+
+            PlaySound(paperRustleSound); 
+
+            if (notepadText != null) notepadText.text = "Awaiting campaign actions...";
             
             Policy p = dailyPolicies[policyIndex];
             policyTitleText.text = p.policyName;
             
-            policyDescText.text = "Contents unknown.\n\nInspect (4 AP) to read the bill.\nApprove blindly (0 AP) for a 50/50 gamble.";
+            policyDescText.text = "Contents unknown.\n\nHighlight (" + p.apCost + " AP) to read the bill.\nStamp blindly (0 AP) for a gamble.";
+
+            int clutterAmount = 0;
+            if (approval < 40) clutterAmount = 2; 
+            if (approval < 20) clutterAmount = 5; 
+
+            for (int i = 0; i < clutterAmount; i++)
+            {
+                SpawnHateMail();
+            }
         }
     }
 
@@ -129,12 +251,15 @@ public class GameManagerScript : MonoBehaviour
         {
             actionPoints -= 4;
             isInspected = true;
-            if (inspectButton != null) inspectButton.interactable = false; 
             
             Policy p = dailyPolicies[policyIndex];
+
+            PlaySound(paperRustleSound); 
+            StartCoroutine(ScreenShake(0.1f, 5f));
            
             if (p.hasLobbyistOffer)
             {
+                PlaySound(errorBuzzerSound); 
                 offerText.text = "Lobbyists are on the line.\nThey will " + 
                                  "donate $" + p.riderMoneyBonus.ToString("N0") + " to your campaign if you attach a deregulatory rider to this bill.\n\n" +
                                  "It will cost you " + Mathf.Abs(p.riderApprovalPenalty) + "% Voter Approval.";
@@ -147,6 +272,10 @@ public class GameManagerScript : MonoBehaviour
             
             UpdateUI();
         }
+        else if (!isInspected && actionPoints < 4)
+        {
+            PlaySound(errorBuzzerSound); 
+        }
     }
     
     public void AcceptRider()
@@ -156,6 +285,9 @@ public class GameManagerScript : MonoBehaviour
         p.moneyChange += p.riderMoneyBonus;
         p.approvalChange += p.riderApprovalPenalty;
         p.description += "\n\n<color=red>[CORPORATE RIDER ATTACHED]</color>";
+        
+        PlaySound(cashRegisterSound); 
+        StartCoroutine(FlashText(moneyText, Color.green)); 
         
         lobbyistPanel.SetActive(false);
         RevealPolicyStats();
@@ -178,14 +310,18 @@ public class GameManagerScript : MonoBehaviour
         if (policyDealtWith) return;
         Policy p = dailyPolicies[policyIndex];
 
-        // Add Juice: Shake the screen when the stamp hits!
-        StartCoroutine(ScreenShake(0.2f, 25f));
-
         if (!isInspected && p.hasLobbyistOffer)
         {
+            PlaySound(stampThudSound);
+            PlaySound(errorBuzzerSound); 
+            StartCoroutine(ScreenShake(0.2f, 25f));
+            
             money = Mathf.Max(0, money + p.moneyChange + p.riderMoneyBonus);
             approval = Mathf.Clamp(approval + p.approvalChange + p.riderApprovalPenalty, 0, 100);
             
+            StartCoroutine(FlashText(moneyText, Color.green));
+            StartCoroutine(FlashText(approvalText, Color.red));
+
             LockCardAfterAction("You blindly approved the bill.\n\n<color=red>A hidden corporate rider was attached!</color>\nEffect: " + 
                                 (p.approvalChange + p.riderApprovalPenalty) + "% Approval, $" + (p.moneyChange + p.riderMoneyBonus));
         }
@@ -193,12 +329,23 @@ public class GameManagerScript : MonoBehaviour
         {
             if (money + p.moneyChange < 0)
             {
+                PlaySound(errorBuzzerSound); 
                 policyDescText.text = p.description + "\n\n<color=red>Insufficient funds to execute this policy. You must Veto, or find outside funding.</color>";
                 return; 
             }
 
+            PlaySound(stampThudSound);
+            StartCoroutine(ScreenShake(0.2f, 25f));
+
             money += p.moneyChange;
             approval = Mathf.Clamp(approval + p.approvalChange, 0, 100); 
+            
+            if (p.moneyChange > 0) StartCoroutine(FlashText(moneyText, Color.green));
+            else if (p.moneyChange < 0) StartCoroutine(FlashText(moneyText, Color.red));
+
+            if (p.approvalChange > 0) StartCoroutine(FlashText(approvalText, Color.green));
+            else if (p.approvalChange < 0) StartCoroutine(FlashText(approvalText, Color.red));
+
             LockCardAfterAction("Policy Approved.\nEffect: " + p.approvalChange + "% Approval, $" + p.moneyChange);
         }
     }
@@ -207,7 +354,7 @@ public class GameManagerScript : MonoBehaviour
     {
         if (policyDealtWith) return;
 
-        // Add Juice: Shake the screen when the stamp hits!
+        PlaySound(stampThudSound);
         StartCoroutine(ScreenShake(0.2f, 15f));
 
         LockCardAfterAction("Policy Vetoed. Status quo maintained.");
@@ -216,11 +363,26 @@ public class GameManagerScript : MonoBehaviour
     private void LockCardAfterAction(string resultText)
     {
         policyDealtWith = true;
-        if (inspectButton != null) inspectButton.interactable = false;
         policyDescText.text = resultText;
         
         UpdateUI();
         CheckLoseCondition();
+    }
+
+    public IEnumerator FlashText(TextMeshProUGUI textElement, Color flashColor)
+    {
+        Color originalColor = Color.white; 
+        textElement.color = flashColor;
+        float elapsed = 0.0f;
+        float duration = 0.5f;
+
+        while (elapsed < duration)
+        {
+            textElement.color = Color.Lerp(flashColor, originalColor, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        textElement.color = originalColor;
     }
 
     private IEnumerator ScreenShake(float duration, float magnitude)
@@ -231,86 +393,101 @@ public class GameManagerScript : MonoBehaviour
 
         while (elapsed < duration)
         {
-            // 1. Revert last frame's offset so we don't drift off screen
             foreach (Transform child in canvasTransform) { child.localPosition -= currentOffset; }
 
-            // 2. Create a random punchy offset
             float x = Random.Range(-1f, 1f) * magnitude;
             float y = Random.Range(-1f, 1f) * magnitude;
             currentOffset = new Vector3(x, y, 0);
 
-            // 3. Apply the new offset to all UI elements (Desk, Cards, Text)
             foreach (Transform child in canvasTransform) { child.localPosition += currentOffset; }
 
             elapsed += Time.deltaTime;
-            yield return null; // Wait for Unity to render the frame
+            yield return null; 
         }
 
-        // 4. Clean up the final offset so the desk goes exactly back to normal
         foreach (Transform child in canvasTransform) { child.localPosition -= currentOffset; }
     }
 
-    public void HostTownHall()
+    public void CallGrassroots()
     {
         if (actionPoints >= 3)
         {
+            PlaySound(paperRustleSound); 
             actionPoints -= 3;
             approval = Mathf.Clamp(approval + 5, 0, 100);
+            
+            StartCoroutine(FlashText(approvalText, Color.green)); 
+            
+            notepadText.text = "<b>Action:</b> Town Hall\nVoters appreciated the transparency.\n<color=green>+5% Approval</color>";
             UpdateUI();
+        }
+        else
+        {
+            PlaySound(errorBuzzerSound);
+            notepadText.text = "<color=red>Not enough AP to organize a Town Hall. (Requires 3)</color>";
         }
     }
 
-    public void BuyMediaAds()
+    public void CallPRFirm()
     {
         if (money >= 15000)
         {
+            PlaySound(cashRegisterSound);
             money -= 15000;
             approval = Mathf.Clamp(approval + 15, 0, 100);
+            
+            StartCoroutine(FlashText(approvalText, Color.green));
+            StartCoroutine(FlashText(moneyText, Color.red));
+
+            notepadText.text = "<b>Action:</b> Ad Blitz\nPublic perception successfully manipulated.\n<color=green>+15% Approval</color>";
             UpdateUI();
+        }
+        else
+        {
+            PlaySound(errorBuzzerSound);
+            notepadText.text = "<color=red>Insufficient funds to hire the PR Firm. (Requires $15k)</color>";
+        }
+    }
+
+    public void CallCorporateFixer()
+    {
+        if (actionPoints >= 2)
+        {
+            PlaySound(cashRegisterSound);
+            actionPoints -= 2;
+            money += 20000;
+            approval = Mathf.Clamp(approval - 10, 0, 100);
+            
+            StartCoroutine(FlashText(moneyText, Color.green));
+            StartCoroutine(FlashText(approvalText, Color.red));
+
+            notepadText.text = "<b>Action:</b> Fixer Meeting\nSecured dark money <color=green>(+$20,000)</color>.\nThe leaked meeting angered constituents <color=red>(-10% Approval)</color>.";
+            
+            StartCoroutine(ScreenShake(0.1f, 10f)); 
+            UpdateUI();
+            CheckLoseCondition();
+        }
+        else
+        {
+            PlaySound(errorBuzzerSound);
+            notepadText.text = "<color=red>Not enough AP to meet with the Fixer. (Requires 2)</color>";
         }
     }
 
     public void EndDay()
     {
-        currentDay++;
-        actionPoints = 8; 
-        approval -= dailyApprovalDecay; 
-        
-        if (currentDay > 30)
-        {
-            dayText.text = "You Survived 30 Days!";
-            LockAllButtons();
-            return;
-        }
-
-        policyIndex++;
-        if (policyIndex < dailyPolicies.Length)
-        {
-            LoadNextPolicy();
-        }
-        else 
-        {
-            policyDescText.text = "No more policies in the deck.";
-        }
-
-        UpdateUI();
-        CheckLoseCondition();
+        PlaySound(paperRustleSound); 
+        StartCoroutine(FadeOutToNextDay()); // Triggers the screen fade before moving to the next day
     }
 
     private void CheckLoseCondition()
     {
         if (approval <= 0)
         {
+            PlaySound(errorBuzzerSound); 
             approvalText.text = "Approval: 0% - RECALLED!";
-            LockAllButtons();
+            if (fadeOverlay != null) fadeOverlay.alpha = 0f; 
         }
-    }
-
-    private void LockAllButtons()
-    {
-        if (inspectButton != null) inspectButton.interactable = false;
-        if (townHallButton != null) townHallButton.interactable = false;
-        if (mediaAdsButton != null) mediaAdsButton.interactable = false;
     }
 
     private void UpdateUI()
@@ -319,8 +496,5 @@ public class GameManagerScript : MonoBehaviour
         approvalText.text = "Approval: " + approval.ToString() + "%";
         apText.text = "AP: " + actionPoints.ToString();
         dayText.text = "Day: " + currentDay.ToString() + " / 30";
-
-        if (townHallButton != null) townHallButton.interactable = (actionPoints >= 3);
-        if (mediaAdsButton != null) mediaAdsButton.interactable = (money >= 15000);
     }
 }

@@ -1,16 +1,18 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class DraggableStamp : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("Stamp Settings")]
-    public bool isApproveStamp; // Check this for the Approve stamp, uncheck for Veto
-    public RectTransform policyCard; // Drag your Policy Card UI panel here
+    public bool isApproveStamp; 
+    public RectTransform policyCard; 
     public GameManagerScript gameManager;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Vector2 startingPosition;
+    private Coroutine returnCoroutine;
 
     void Awake()
     {
@@ -21,19 +23,21 @@ public class DraggableStamp : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     void Start()
     {
-        // Remember where the stamp sits on the desk so it can snap back
         startingPosition = rectTransform.anchoredPosition;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        canvasGroup.alpha = 0.8f; // Make it slightly transparent while dragging
-        canvasGroup.blocksRaycasts = false; // Allow the mouse to "see" through the stamp to the card below
+        if (returnCoroutine != null) StopCoroutine(returnCoroutine);
+        
+        canvasGroup.alpha = 0.8f; 
+        canvasGroup.blocksRaycasts = false; 
+        transform.SetAsLastSibling();
+        
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Move the stamp with the mouse
         rectTransform.anchoredPosition += eventData.delta / GetComponentInParent<Canvas>().scaleFactor;
     }
 
@@ -42,14 +46,12 @@ public class DraggableStamp : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
 
-        // Check if we dropped the stamp on top of the Policy Card
         if (RectTransformUtility.RectangleContainsScreenPoint(policyCard, Input.mousePosition, eventData.pressEventCamera))
         {
             ApplyStamp();
         }
 
-        // Snap the stamp back to its resting place on the desk
-        rectTransform.anchoredPosition = startingPosition;
+        returnCoroutine = StartCoroutine(SmoothReturn());
     }
 
     private void ApplyStamp()
@@ -62,5 +64,20 @@ public class DraggableStamp : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             gameManager.VetoPolicy();
         }
+    }
+
+    private IEnumerator SmoothReturn()
+    {
+        float elapsedTime = 0f;
+        float duration = 0.15f; 
+        Vector2 currentPos = rectTransform.anchoredPosition;
+
+        while (elapsedTime < duration)
+        {
+            rectTransform.anchoredPosition = Vector2.Lerp(currentPos, startingPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        rectTransform.anchoredPosition = startingPosition;
     }
 }
