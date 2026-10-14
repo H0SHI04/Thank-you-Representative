@@ -122,6 +122,97 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &94241815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 94241816}
+  - component: {fileID: 94241818}
+  - component: {fileID: 94241817}
+  - component: {fileID: 94241819}
+  m_Layer: 5
+  m_Name: ApproveStamp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &94241816
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94241815}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1564666317}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -798, y: 234}
+  m_SizeDelta: {x: 208.0903, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &94241817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94241815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.12071192, g: 0.4811321, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &94241818
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94241815}
+  m_CullTransparentMesh: 1
+--- !u!114 &94241819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94241815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9debd073f840724f9e48cd88034f3a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isApproveStamp: 1
+  policyCard: {fileID: 6068587607571937989, guid: 67876999a6f62e74bbad864b5f2e545a, type: 3}
+  gameManager: {fileID: 1629736720}
 --- !u!1 &289587123
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,7 +648,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -62.229, y: 232.35}
+  m_AnchoredPosition: {x: -62.229004, y: 232.35}
   m_SizeDelta: {x: 124.4586, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &408022662
@@ -1435,6 +1526,97 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1013905144}
   m_CullTransparentMesh: 1
+--- !u!1 &1056053711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1056053712}
+  - component: {fileID: 1056053714}
+  - component: {fileID: 1056053713}
+  - component: {fileID: 1056053715}
+  m_Layer: 5
+  m_Name: VetoStamp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1056053712
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056053711}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1564666317}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -798, y: 81}
+  m_SizeDelta: {x: 208.0903, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1056053713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056053711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.6415094, g: 0.0873654, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1056053714
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056053711}
+  m_CullTransparentMesh: 1
+--- !u!114 &1056053715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056053711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9debd073f840724f9e48cd88034f3a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isApproveStamp: 0
+  policyCard: {fileID: 1260641702}
+  gameManager: {fileID: 1629736720}
 --- !u!1 &1112852859
 GameObject:
   m_ObjectHideFlags: 0
@@ -1770,17 +1952,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.00042915, y: 48}
   m_SizeDelta: {x: 253.76, y: 67.071}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1149283923 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1187281634183199596, guid: 67876999a6f62e74bbad864b5f2e545a, type: 3}
-  m_PrefabInstance: {fileID: 2333902724689462070}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &1260641702 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6068587607571937989, guid: 67876999a6f62e74bbad864b5f2e545a, type: 3}
@@ -2276,8 +2447,8 @@ Canvas:
   m_GameObject: {fileID: 1564666313}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2311,6 +2482,8 @@ RectTransform:
   - {fileID: 1867663605}
   - {fileID: 1526657177}
   - {fileID: 1399843362}
+  - {fileID: 94241816}
+  - {fileID: 1056053712}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2487,33 +2660,249 @@ MonoBehaviour:
   dayText: {fileID: 1763464457}
   policyTitleText: {fileID: 874876192}
   policyDescText: {fileID: 2097561358}
-  approveButton: {fileID: 1149283923}
   inspectButton: {fileID: 893341163}
-  vetoButton: {fileID: 2032105637}
   townHallButton: {fileID: 1270981989}
   mediaAdsButton: {fileID: 1134153375}
   lobbyistPanel: {fileID: 1399843361}
   offerText: {fileID: 421031293}
   dailyPolicies:
-  - policyName: Funds for public Parks
-    description: Reinvests into renovating the city park.
-    approvalChange: 15
-    moneyChange: -10000
-    hasLobbyistOffer: 1
-    riderMoneyBonus: 40000
-    riderApprovalPenalty: -20
-  - policyName: Privatizing the water system
-    description: Increases the monthly rate of water bills throughout the city
-    approvalChange: -15
-    moneyChange: 15000
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
     hasLobbyistOffer: 0
     riderMoneyBonus: 40000
     riderApprovalPenalty: -20
-  - policyName: Public school Reopenings
-    description: Reopens fully renovated and high standard public schools in necessary
-      neighborhood location
-    approvalChange: 20
-    moneyChange: -20000
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
+    hasLobbyistOffer: 0
+    riderMoneyBonus: 40000
+    riderApprovalPenalty: -20
+  - policyName: 
+    description: 
+    apCost: 0
+    approvalChange: 0
+    moneyChange: 0
     hasLobbyistOffer: 0
     riderMoneyBonus: 40000
     riderApprovalPenalty: -20
@@ -2566,8 +2955,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0050049, y: -1.7699}
-  m_SizeDelta: {x: 1920, y: 1083.5}
+  m_AnchoredPosition: {x: 2.27, y: -6.3}
+  m_SizeDelta: {x: 2060.33, y: 1219.31}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1728426943
 MonoBehaviour:
@@ -2582,7 +2971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.36477977, g: 0.27736163, b: 0.033839613, a: 1}
+  m_Color: {r: 0.31132078, g: 0.22978438, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2874,17 +3263,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1867663604}
   m_CullTransparentMesh: 1
---- !u!114 &2032105637 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7237152278208004123, guid: 67876999a6f62e74bbad864b5f2e545a, type: 3}
-  m_PrefabInstance: {fileID: 2333902724689462070}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2097561358 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3608056173000668612, guid: 67876999a6f62e74bbad864b5f2e545a, type: 3}
